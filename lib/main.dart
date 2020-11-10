@@ -2,6 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:resturantapp/blocs/book/book_bloc.dart';
+import 'package:resturantapp/blocs/book/book_edit_add_toggle_bloc.dart';
+import 'package:resturantapp/blocs/book/book_event.dart';
+import 'package:resturantapp/resources/apis/book_api_provider.dart';
+import 'layouts/layouts.dart';
 import 'blocs/blocs.dart';
 import 'services/services.dart';
 import 'pages/pages.dart';
@@ -26,9 +31,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Authentication Demo',
+      title: 'Simple Api App',
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primarySwatch: Colors.blue,
       ),
       // BlocBuilder will listen to changes in AuthenticationState
       // and build an appropriate widget based on the state.
@@ -36,11 +41,19 @@ class MyApp extends StatelessWidget {
         builder: (context, state) {
           if (state is AuthenticationAuthenticated) {
             // show home page
-            return HomePage(
-              user: state.user,
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider(
+                  create: (_)=> BookEditAddToggleBloc(),
+                ),
+                BlocProvider(
+                  create: (_)=> BookBloc()..add(GetAllBookEvent()),
+                ),
+              ],
+              child: Dashboard(user: state.user,),
             );
           }
-          // otherwise show login page
+          // otherwise show welcome page
           return LoginPage();
         },
       ),

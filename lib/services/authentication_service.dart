@@ -1,5 +1,10 @@
-import '../exceptions/exceptions.dart';
+import 'dart:math';
+
+import 'package:resturantapp/resources/apis/login_api_provider.dart';
+import 'package:resturantapp/resources/repository/login_api_repository.dart';
+
 import '../models/models.dart';
+import 'package:http/http.dart' as http;
 
 abstract class AuthenticationService {
   Future<User> getCurrentUser();
@@ -8,23 +13,19 @@ abstract class AuthenticationService {
 }
 
 class FakeAuthenticationService extends AuthenticationService {
+  final LoginApiRepository loginApiRepository = LoginApiRepository(loginApiProvider: LoginApiProvider(
+      httpClient: http.Client()
+  ));
+
   @override
   Future<User> getCurrentUser() async {
-    return null; // return null for now
+
+     return loginApiRepository.getCurrentUser();
   }
 
   @override
   Future<User> signInWithEmailAndPassword(String email, String password) async {
-    await Future.delayed(Duration(seconds: 1)); // simulate a network delay
-    print('email.password');
-    print(email);
-    print(password);
-    print(email.toLowerCase() != 'test@domain.com' );
-    print(password != 'testpass123');
-    if (email.toLowerCase() != 'test@domain.com' && password != 'testpass123') {
-      throw AuthenticationException(message: 'Wrong username or password');
-    }
-    return User(name: 'Test User', email: email);
+    return loginApiRepository.authenticateUser(email, password);
   }
 
   @override

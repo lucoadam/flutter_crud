@@ -117,7 +117,7 @@ class __SignInFormState extends State<_SignInForm> {
                 children: <Widget>[
                   TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'Email address',
+                      labelText: 'Username',
                       filled: true,
                       isDense: true,
                     ),
@@ -126,7 +126,7 @@ class __SignInFormState extends State<_SignInForm> {
                     autocorrect: false,
                     validator: (value){
                       if (value == null){
-                        return 'Email is required.';
+                        return 'Username is required.';
                       }
                       return null;
                     },
